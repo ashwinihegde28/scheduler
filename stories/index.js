@@ -4,8 +4,12 @@ import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import DayListItem from "components/DayListItem.js";
 import DayList from "components/DayList.js";
-import InterviewerListItem from "components/InterviewerListItem.js";
+import Appointment from "components/Appointment/index.js";
 import InterviewerList from "components/InterviewerList.js";
+import Header from "components/Appointment/Header.js";
+import Empty from "components/Appointment/Empty.js";
+import Show from "components/Appointment/Show.js";
+import Confirm from "components/Appointment/Confirm.js";
 import "index.scss";
 
 import Button from "components/Button";
@@ -88,5 +92,29 @@ storiesOf("InterviewerList", module)
     <InterviewerList
       interviewers={interviewers}
       onChange={action("setInterviewer")}
+    />
+  ));
+
+storiesOf("Appointment", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }],
+  })
+  .add("Appointment", () => <Appointment />)
+  .add("Appointment with Time", () => <Appointment time="12pm" />)
+  .add("Header", () => <Header time="12pm" />)
+  .add("Empty", () => <Empty onAdd={action("onAdd")} />)
+  .add("Show", () => (
+    <Show
+      student={"Lydia Miller-Jones"}
+      interviewer={interviewers[2]}
+      onEdit={action("onEdit")}
+      onDelete={action("onDelete")}
+    />
+  ))
+  .add("Confirm", () => (
+    <Confirm
+      message={"Lydia Miller-Jones"}
+      onConfirm={action("onConfirm")}
+      onCancel={action("onCancel")}
     />
   ));

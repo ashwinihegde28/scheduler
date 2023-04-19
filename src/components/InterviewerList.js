@@ -3,7 +3,8 @@ import "components/InterviewerList.scss";
 import InterviewerListItem from "components/InterviewerListItem.js";
 
 export default function InterviewerList(props) {
-  const { value, onChange, newProp } = props;
+  //  we have-interviews,value and onChange passes in props
+  const { value, onChange } = props;
   let interviewers = props.interviewers.map((interviewer) => {
     return (
       <InterviewerListItem
