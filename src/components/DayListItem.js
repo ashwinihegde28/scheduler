@@ -15,7 +15,7 @@ const formatSpots = (spots) => {
 
 export default function DayListItem(props) {
   const availabilityMessage = formatSpots(props.spots);
-  let dayClass = classNames("day-list__item", {
+  let dayClass = classNames("day-listitem", {
     "day-list__item--selected": props.selected,
     "day-list__item--full": !props.spots,
   });
