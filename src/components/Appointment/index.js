@@ -26,7 +26,6 @@ export default function Appointment(props) {
   );
 
   function save(name, interviewer) {
-    console.log("Sace : interviewer =>", interviewer);
     const interview = {
       student: name,
       interviewer,
@@ -56,7 +55,7 @@ export default function Appointment(props) {
       {mode === SHOW && (
         <Show
           student={props.interview.student}
-          interviewer={[props.interview.interviewer]}
+          interviewer={props.interview.interviewer}
           onDelete={() => transition(CONFIRM)}
           onEdit={() => transition(EDIT)}
         />
