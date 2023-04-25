@@ -7,6 +7,7 @@ import Confirm from "components/Appointment/Confirm.js";
 import useVisualMode from "../../hooks/useVisualMode.js";
 import Form from "./Form";
 import Status from "./Status.js";
+import Error from "components/Appointment/Error.js";
 
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
@@ -15,6 +16,8 @@ const SAVING = "SAVING";
 const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
   //When props.interview contains a value, then we want to pass useVisualMode the SHOW mode, if it is empty then we should pass EMPTY.
@@ -23,18 +26,28 @@ export default function Appointment(props) {
   );
 
   function save(name, interviewer) {
+    console.log("Sace : interviewer =>", interviewer);
     const interview = {
       student: name,
       interviewer,
     };
     transition(SAVING);
-    props.bookInterview(props.id, interview).then(() => transition(SHOW));
+    props
+      .bookInterview(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch(() => transition(ERROR_SAVE, true));
   }
 
   // This function will call the cancelInterview function in the Application component and wait for it to complete before displaying a new mode with deleting status, then render empty component.
   function deleteAppointment() {
-    transition(DELETING);
-    props.cancelInterview(props.id).then(() => transition(EMPTY));
+    transition(DELETING, true);
+    props
+      .cancelInterview(props.id)
+      .then(() => transition(EMPTY))
+      .catch((err) => {
+        console.log("err", err.message);
+        transition(ERROR_DELETE, true);
+      });
   }
   return (
     <article className="appointment">
@@ -49,7 +62,14 @@ export default function Appointment(props) {
         />
       )}
       {mode === CREATE && (
-        <Form interviewers={props.interviewers} onSave={save} />
+        <Form
+          interviewers={props.interviewers}
+          interviewer={props.interviewer}
+          onSave={save}
+          bookInterview={props.bookInterview}
+          onCancel={() => back(EMPTY)}
+          name={props.name}
+        />
       )}
       {mode === CONFIRM && (
         <Confirm
@@ -67,11 +87,15 @@ export default function Appointment(props) {
       {mode === EDIT && (
         <Form
           interviewers={props.interviewers}
-          // interviewer={props.interview.interviewer.id}
+          interviewer={props.interview.interviewer.id}
           name={props.interview.name}
           onSave={save}
           onCancel={back}
         />
+      )}
+      {mode === ERROR_SAVE && <Error message={"Error Save"} onClose={back} />}
+      {mode === ERROR_DELETE && (
+        <Error message={"Error Deleting"} onClose={back} />
       )}
     </article>
   );
