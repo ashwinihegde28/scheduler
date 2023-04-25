@@ -3,12 +3,18 @@ import "components/Appointment/styles.scss";
 import Header from "components/Appointment/Header.js";
 import Empty from "components/Appointment/Empty.js";
 import Show from "components/Appointment/Show.js";
+import Confirm from "components/Appointment/Confirm.js";
 import useVisualMode from "../../hooks/useVisualMode.js";
 import Form from "./Form";
+import Status from "./Status.js";
 
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
+const SAVING = "SAVING";
+const DELETING = "DELETING";
+const CONFIRM = "CONFIRM";
+const EDIT = "EDIT";
 
 export default function Appointment(props) {
   //When props.interview contains a value, then we want to pass useVisualMode the SHOW mode, if it is empty then we should pass EMPTY.
@@ -16,6 +22,20 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
+  function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer,
+    };
+    transition(SAVING);
+    props.bookInterview(props.id, interview).then(() => transition(SHOW));
+  }
+
+  // This function will call the cancelInterview function in the Application component and wait for it to complete before displaying a new mode with deleting status, then render empty component.
+  function deleteAppointment() {
+    transition(DELETING);
+    props.cancelInterview(props.id).then(() => transition(EMPTY));
+  }
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -24,9 +44,35 @@ export default function Appointment(props) {
         <Show
           student={props.interview.student}
           interviewer={[props.interview.interviewer]}
+          onDelete={() => transition(CONFIRM)}
+          onEdit={() => transition(EDIT)}
         />
       )}
-      {mode === CREATE && <Form interviewers={props.interviewers} />}
+      {mode === CREATE && (
+        <Form interviewers={props.interviewers} onSave={save} />
+      )}
+      {mode === CONFIRM && (
+        <Confirm
+          message="Delete the appointment?..."
+          onConfirm={deleteAppointment}
+          onCancel={back}
+        />
+      )}
+      {/* When user confirms to delete the appointmnet. */}
+      {mode === DELETING && <Status message="Deleting..." />}
+
+      {/* When user confirms to delete the appointmnet. */}
+      {mode === SAVING && <Status message="Saving..." />}
+
+      {mode === EDIT && (
+        <Form
+          interviewers={props.interviewers}
+          // interviewer={props.interview.interviewer.id}
+          name={props.interview.name}
+          onSave={save}
+          onCancel={back}
+        />
+      )}
     </article>
   );
 }
