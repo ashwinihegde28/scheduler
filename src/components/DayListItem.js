@@ -26,7 +26,7 @@ export default function DayListItem(props) {
       selected={props.selected}
     >
       <h2 className="text--regular">{props.name}</h2>
-      <h3 className="text--light">{availabilityMessage} spots remaining</h3>
+      <h3 className="text--light">{availabilityMessage}</h3>
     </li>
   );
 }
