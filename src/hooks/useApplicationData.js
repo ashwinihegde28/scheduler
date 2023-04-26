@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+
 export default function useVisualMode(initial) {
   const [state, setState] = useState({
     day: "Monday",
@@ -27,6 +28,7 @@ export default function useVisualMode(initial) {
   function numOfSpots(reqType) {
     const days = state.days.map((day) => {
       if (day.name === state.day) {
+        // while creating new appointmnet
         if (reqType === "bookInterview") {
           return { ...day, spots: day.spots - 1 };
         } else {
@@ -41,7 +43,6 @@ export default function useVisualMode(initial) {
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
-      //   interview: { ...interview },
     };
 
     const preInterview = appointment.interview;
@@ -55,6 +56,7 @@ export default function useVisualMode(initial) {
     let days = state.days;
 
     return axios.put(`/api/appointments/${id}`, appointment).then((res) => {
+      //In case of edit interview will not be null so we dont need to change the spots count.
       if (!preInterview) {
         days = numOfSpots("bookInterview");
       }

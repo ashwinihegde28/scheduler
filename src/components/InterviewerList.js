@@ -1,6 +1,6 @@
 import React from "react";
-import "components/InterviewerList.scss";
 import InterviewerListItem from "components/InterviewerListItem.js";
+import "components/InterviewerList.scss";
 
 export default function InterviewerList(props) {
   //  we have-interviews,value and onChange passes in props

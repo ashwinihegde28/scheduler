@@ -1,5 +1,4 @@
-import React, { Fragment } from "react";
-import "components/Appointment/styles.scss";
+import React from "react";
 import Header from "components/Appointment/Header.js";
 import Empty from "components/Appointment/Empty.js";
 import Show from "components/Appointment/Show.js";
@@ -8,6 +7,7 @@ import useVisualMode from "../../hooks/useVisualMode.js";
 import Form from "./Form";
 import Status from "./Status.js";
 import Error from "components/Appointment/Error.js";
+import "components/Appointment/styles.scss";
 
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
