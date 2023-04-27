@@ -2,6 +2,7 @@
   We are rendering `<Application />` down below, so we need React.createElement
 */
 import React from "react";
+import axios from "axios";
 
 /*
   We import our helper functions from the react-testing-library
@@ -19,6 +20,7 @@ import {
   queryByText,
   queryByAltText,
   getByTestId,
+  waitForElementToBeRemoved,
 } from "@testing-library/react";
 
 /*
@@ -112,6 +114,7 @@ describe("Application", () => {
     expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
   });
 
+  // test to Edit.
   it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
     // 1. Render the Application.
     const { container } = render(<Application />);
@@ -139,5 +142,62 @@ describe("Application", () => {
     );
     expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
     expect(getByText(appointment, "Lydia Miller-Jones")).toBeInTheDocument();
+  });
+
+  /* test number five */
+  //   it("shows the save error when failing to save an appointment", () => {
+  //     axios.put.mockRejectedValueOnce();
+  //   });
+
+  //Test error on Save
+  it("shows the save error when failing to save an appointment", async () => {
+    axios.put.mockRejectedValueOnce();
+    const { container } = render(<Application />);
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+    const appointment = getAllByTestId(container, "appointment")[0];
+    fireEvent.click(getByAltText(appointment, "Add"));
+    fireEvent.change(getByTestId(appointment, "student-name-input"), {
+      target: { value: "abc" },
+    });
+    fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
+    fireEvent.click(getByText(appointment, "Save"));
+    await waitForElementToBeRemoved(() => getByText(appointment, "Saving..."));
+    expect(getByText(appointment, "Error Save")).toBeInTheDocument();
+    fireEvent.click(getByAltText(appointment, "Close"));
+    expect(getByTestId(appointment, "student-name-input")).toHaveValue("");
+  });
+
+  // Test Delete functionality
+  it("shows the delete error when failing to delete an existing appointment", async () => {
+    //insert the rejection
+    axios.delete.mockRejectedValueOnce();
+    // 1. Render the Application.
+    const { container } = render(<Application />);
+
+    // 2. Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+
+    // 3. Click the "Delete" button on the booked appointment.
+    const appointment = getAllByTestId(container, "appointment").find(
+      (appointment) => queryByText(appointment, "Archie Cohen")
+    );
+
+    fireEvent.click(queryByAltText(appointment, "Delete"));
+
+    // 4. Check that the confirmation message is shown.
+    expect(
+      getByText(appointment, "Are you sure you would like to delete?")
+    ).toBeInTheDocument();
+
+    // 5. Click the "Confirm" button on the confirmation.
+    fireEvent.click(queryByText(appointment, "Confirm"));
+
+    // 6. Check that the element with the text "Deleting" is displayed.
+    expect(getByText(appointment, "Deleting...")).toBeInTheDocument();
+
+    //7. Wait for error to be displayed.
+    await waitForElement(() => getByText(appointment, "Error Deleting"));
+
+    expect(getByText(appointment, "Error Deleting")).toBeInTheDocument();
   });
 });

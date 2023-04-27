@@ -91,11 +91,11 @@ export default {
       data: interview,
     });
   }),
-  delete: jest.fn((id) => {
+
+  delete: jest.fn((url) => {
     return Promise.resolve({
-      status: 200,
-      statusText: "OK",
-      data: null,
+      status: 204,
+      statusText: "No Content",
     });
   }),
 };

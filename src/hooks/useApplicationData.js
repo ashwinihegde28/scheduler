@@ -81,17 +81,14 @@ export default function useVisualMode(initial) {
       [id]: appointment,
     };
 
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then((res) => {
-        const days = numOfSpots();
-        setState({
-          ...state,
-          appointments,
-          days,
-        });
-      })
-      .catch((e) => console.log(Error, e));
+    return axios.delete(`/api/appointments/${id}`).then((res) => {
+      const days = numOfSpots();
+      setState({
+        ...state,
+        appointments,
+        days,
+      });
+    });
   }
 
   return { state, setDay, bookInterview, cancelInterview };
