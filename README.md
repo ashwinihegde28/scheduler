@@ -1,6 +1,6 @@
 # Interview Scheduler
 
-Interview Scheduler is a Single Page Application for tracking student interviews. It allow appointments to be booked Mon-Fri between the hours of 12 pm -5pm. Scheduler is built with the latest tools and techniques for optimized user experience which includes add, edit and delete appointments in real time.The App utilizes React built-in and custom hooks and data is persisted by the API server using a PostgreSQL database. The client application communicates with an API server over HTTP, using the JSON format. For quality assurance, the project follows best practices of TDD (Test Driven Development), where individual Components are tested in isolation as well as End-to-End testing is performed.
+Interview Scheduler is a Single Page Application for tracking student interviews. It allow appointments to be booked from Mon-Fri between the hours of 12 pm -5pm. Scheduler is built with the latest tools and techniques for optimized user experience which includes add, edit and delete appointments in real time.The App utilizes React built-in and custom hooks and data is persisted by the API server using a PostgreSQL database. The client application communicates with an API server over HTTP, using the JSON format. For quality assurance, the project follows best practices of TDD (Test Driven Development), where individual Components are tested in isolation as well as End-to-End testing is performed.
 
 ## Project description in brief
 
